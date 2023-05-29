@@ -1,4 +1,5 @@
 import express from 'express';
+import { verifyToken } from '../utilities/middlewere';
 import { getCategories, 
     getCategoryById, 
     createCategory, 
@@ -9,6 +10,6 @@ export const categoryRouter = express.Router();
 
 categoryRouter.get('/', getCategories);
 categoryRouter.get('/:categoryId', getCategoryById);
-categoryRouter.post('/', createCategory);
-categoryRouter.put('/:categoryId', updateCategory);
-categoryRouter.delete('/:categoryId', deleteCategory);
+categoryRouter.post('/', verifyToken, createCategory);
+categoryRouter.put('/:categoryId', verifyToken, updateCategory);
+categoryRouter.delete('/:categoryId', verifyToken, deleteCategory);

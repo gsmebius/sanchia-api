@@ -10,9 +10,9 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   name String
-  email String
+  email String @unique
   password String
-  access_token String
+  accessToken String?
   role    UserRole     @default(ADMIN)
 }
 
@@ -23,7 +23,7 @@ enum UserRole {
 
 model Product {
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
   description String
   price Int
   stock Int
