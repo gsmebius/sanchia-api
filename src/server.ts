@@ -6,6 +6,8 @@ import cors from 'cors';
 import { categoryRouter } from './routes/category.routes';
 import { productRouter } from './routes/product.routes';
 import { userRouter  } from './routes/user.routes';
+import { clientRouter } from './routes/client.routes';
+import { cartRouter } from './routes/cart.routes';
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ app.use(cors());
 app.use('/category', categoryRouter);
 app.use('/product', productRouter);
 app.use('/user', userRouter);
+app.use('/client', clientRouter);
+app.use('/cart', cartRouter);
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);

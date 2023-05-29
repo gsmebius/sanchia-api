@@ -1,0 +1,17 @@
+import express from 'express';
+import { verifyToken } from '../utilities/middlewere';
+import { clientSignIn, 
+    clientSignUp, 
+    clientSignOut, 
+    getClients, 
+    deleteClient, 
+    updateClient } from '../controllers/client.controller';
+
+export const clientRouter = express.Router();
+
+clientRouter.post('/:clientId', clientSignIn);
+clientRouter.post('/', clientSignUp);
+clientRouter.post('/out/:clientId', clientSignOut);
+clientRouter.get('/', verifyToken, getClients);
+clientRouter.delete('/:clientId', verifyToken, deleteClient);
+clientRouter.put('/:clientId', verifyToken, updateClient);

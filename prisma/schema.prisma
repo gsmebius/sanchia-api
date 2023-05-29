@@ -8,12 +8,12 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
-  password String
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String   @unique
+  password    String
   accessToken String?
-  role    UserRole     @default(ADMIN)
+  role        UserRole @default(ADMIN)
 }
 
 enum UserRole {
@@ -21,19 +21,42 @@ enum UserRole {
   SELLER
 }
 
-model Product {
-  id Int @id @default(autoincrement())
-  name String @unique
-  description String
-  price Int
-  stock Int
-  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId Int 
+model Client {
+  id          Int        @id @default(autoincrement())
+  name        String
+  email       String     @unique
+  password    String
+  accessToken String?
+  role        ClientRole @default(BUYER)
+  cart        Cart[]
+}
 
+enum ClientRole {
+  DISTRIBUTOR
+  BUYER
+}
+
+model Cart {
+  id        Int     @id @default(autoincrement())
+  client    Client  @relation(fields: [clientId], references: [id])
+  clientId  Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String
+  price       Int
+  stock       Int
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId  Int
+  Cart        Cart[]
 }
 
 model Category {
-  id Int @id @default(autoincrement())
-  name String
+  id      Int       @id @default(autoincrement())
+  name    String
   product Product[]
 }

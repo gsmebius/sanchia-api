@@ -1,23 +1,23 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { compare, encrypt, tokenKey } from './../utilities/helpers';
+import { compare, encrypt, tokenKey } from '../utilities/helpers';
 
 const prisma = new PrismaClient();
 
-export const signUp = async (req: Request, res: Response) => {
+export const clientSignUp = async (req: Request, res: Response) => {
   try {
     const { name, email, password, role } = req.body;
     const passwordHash = await encrypt(password);
-    const registerUser = await prisma.user.create({
+    const registerClient = await prisma.client.create({
       data: { name, email, password: passwordHash, role }
     });
-    const tokenSession = await tokenKey(registerUser.id);
-    const userWithToken = await prisma.user.update({
-      where: { id: registerUser.id },
+    const tokenSession = await tokenKey(registerClient.id);
+    const clientWithToken = await prisma.client.update({
+      where: { id: registerClient.id },
       data: { accessToken : tokenSession }
     });
     return res.status(200).send({
-      userWithToken
+      clientWithToken
     });
   } catch (err) {
     return res.status(500).send({
@@ -27,21 +27,21 @@ export const signUp = async (req: Request, res: Response) => {
   }
 };
 
-export const signIn = async (req: Request, res: Response) => {
+export const clientSignIn = async (req: Request, res: Response) => {
   let { email, password } = req.body;
   try {
-    const user = await prisma.user.findFirst({
+    const client = await prisma.client.findFirst({
       where: { email }
     });
-    if (!user) {
+    if (!client) {
       res.status(404).json({
         message: 'user not found'
       });
     }
-    const checkpass = await compare(password, String(user?.password));
-    const tokenSession = await tokenKey(user?.id);
-    const userUpdate = await prisma.user.update({
-      where: { id: user?.id },
+    const checkpass = await compare(password, String(client?.password));
+    const tokenSession = await tokenKey(client?.id);
+    const clientUpdate = await prisma.client.update({
+      where: { id: client?.id },
       data: { accessToken: tokenSession }
     });
     if (!checkpass) {
@@ -51,7 +51,7 @@ export const signIn = async (req: Request, res: Response) => {
     }
     if (checkpass) {
       return res.status(200).send({
-        userUpdate
+        clientUpdate
       });
     }
   } catch (err) {
@@ -62,15 +62,15 @@ export const signIn = async (req: Request, res: Response) => {
   }
 };
 
-export const signOut = async (req: Request, res: Response) => {
+export const clientSignOut = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
-    if (!userId)
+    const { clientId } = req.params;
+    if (!clientId)
       return res.status(400).send({
         message: 'Missing param: id'
       });
-    await prisma.user.update({
-      where: { id: Number(userId) },
+    await prisma.client.update({
+      where: { id: Number(clientId) },
       data: { accessToken: '' }
     });
     return res.status(200).send({
@@ -84,11 +84,11 @@ export const signOut = async (req: Request, res: Response) => {
   }
 };
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getClients = async (req: Request, res: Response) => {
   try {
-    const users = await prisma.user.findMany();
+    const clients = await prisma.client.findMany();
     return res.status(200).send({
-      users
+      clients
     });
   } catch (err) {
     return res.status(500).send({
@@ -98,18 +98,18 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateClient = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const { clientId } = req.params;
     const { name, email, password, role } = req.body;
     const passwordHash = await encrypt(password);
-    const userUpdate = await prisma.user.update({
-      where: { id: Number(userId) },
+    const clientUpdate = await prisma.user.update({
+      where: { id: Number(clientId) },
       data: { name, email, password : passwordHash, role }
     });
     return res.status(200).send({
-      message: 'user updated successfully',
-      userUpdate
+      message: 'client updated successfully',
+      clientUpdate
     });
   } catch (err) {
     return res.status(500).send({
@@ -119,14 +119,14 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteClient = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
-    await prisma.user.delete({
-      where: { id: Number(userId) }
+    const { clientId } = req.params;
+    await prisma.client.delete({
+      where: { id: Number(clientId) }
     });
     return res.status(200).send({
-      message: 'user deleted successfully'
+      message: 'client deleted successfully'
     });
   } catch (err) {
     return res.status(500).send({
