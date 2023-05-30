@@ -9,8 +9,8 @@ import { signIn,
 
 export const userRouter = express.Router();
 
-userRouter.post('/:userId', signIn);
 userRouter.post('/', signUp);
+userRouter.post('/', signIn);
 userRouter.post('/out/:userId', signOut);
 userRouter.get('/', verifyToken, getUsers);
 userRouter.delete('/:userId', verifyToken, deleteUser);

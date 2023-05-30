@@ -9,8 +9,8 @@ import { clientSignIn,
 
 export const clientRouter = express.Router();
 
-clientRouter.post('/', clientSignIn);
 clientRouter.post('/', clientSignUp);
+clientRouter.post('/', clientSignIn);
 clientRouter.post('/out/:clientId', clientSignOut);
 clientRouter.get('/', verifyToken, getClients);
 clientRouter.delete('/:clientId', verifyToken, deleteClient);
