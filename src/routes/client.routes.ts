@@ -9,7 +9,7 @@ import { clientSignIn,
 
 export const clientRouter = express.Router();
 
-clientRouter.post('/:clientId', clientSignIn);
+clientRouter.post('/', clientSignIn);
 clientRouter.post('/', clientSignUp);
 clientRouter.post('/out/:clientId', clientSignOut);
 clientRouter.get('/', verifyToken, getClients);

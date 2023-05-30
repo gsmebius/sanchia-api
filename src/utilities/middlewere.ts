@@ -15,10 +15,20 @@ export const verifyToken = async (
     const removeBearer = authorization?.split(' ') || '';
     const token = removeBearer[1];
     const verify: any = jwt.verify(String(token), String(process.env.JWT_KEY));
-    const tokenExist = await prisma.user.findFirst({
+
+    const tokenUserExist = await prisma.user.findFirst({
       where: { accessToken: token }
     });
-    if (String(verify) && tokenExist) {
+    const tokenClientExist = await prisma.client.findFirst({
+      where: { accessToken: token }
+    });
+
+    let foundToken = false
+    if (tokenClientExist || tokenUserExist) {
+      foundToken = true
+    }
+
+    if (String(verify) && foundToken) {
       const data: any = jwt.decode(token);
       req.user = data;
       next();

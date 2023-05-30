@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export const addToCart = async (req: CustomRequest, res: Response) => {
   try {
     const { productId } = req.params;
-    const clientId = Number(req.client?.id);
+    const clientId = Number(req.user?.id);
     if (!productId || !clientId)
       return res.status(400).send({
         message: 'Missing param: id or productId'
@@ -28,7 +28,7 @@ export const addToCart = async (req: CustomRequest, res: Response) => {
 export const removeToCart = async (req: CustomRequest, res: Response) => {
   try {
     const { productId } = req.params;
-    const clientId = Number(req.client?.id);
+    const clientId = Number(req.user?.id);
     if (!productId || !clientId)
       return res.status(400).send({
         message: 'Missing param: id or productId'
@@ -56,7 +56,7 @@ export const removeToCart = async (req: CustomRequest, res: Response) => {
 
 export const getCart = async (req: CustomRequest, res: Response) => {
   try {
-    const clientId = Number(req.client?.id);
+    const clientId = Number(req.user?.id);
     if (!clientId) {
       return res.status(404).send({
         message: 'Missing param id'
