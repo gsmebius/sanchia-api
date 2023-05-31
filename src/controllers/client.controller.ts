@@ -28,7 +28,12 @@ export const clientSignUp = async (req: Request, res: Response) => {
 };
 
 export const clientSignIn = async (req: Request, res: Response) => {
-  let { email, password } = req.body;
+  const { email, password } = req.body;
+  if(!email) {
+    return res.status(404).send({
+      message: 'missing email'
+    });
+  }
   try {
     const client = await prisma.client.findFirst({
       where: { email }

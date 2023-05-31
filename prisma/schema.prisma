@@ -29,6 +29,7 @@ model Client {
   accessToken String?
   role        ClientRole @default(BUYER)
   cart        Cart[]
+  order       Order[]
 }
 
 enum ClientRole {
@@ -38,6 +39,7 @@ enum ClientRole {
 
 model Cart {
   id        Int     @id @default(autoincrement())
+  quantity  Int     @default(1)
   client    Client  @relation(fields: [clientId], references: [id])
   clientId  Int
   product   Product @relation(fields: [productId], references: [id])
@@ -45,18 +47,36 @@ model Cart {
 }
 
 model Product {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
   description String
-  price       Int
+  price       Float
   stock       Int
-  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category    Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId  Int
   Cart        Cart[]
+  orderDetail OrderDetail[]
 }
 
 model Category {
   id      Int       @id @default(autoincrement())
   name    String
   product Product[]
+}
+
+model Order {
+  id          Int           @id @default(autoincrement())
+  client      Client        @relation(fields: [clientId], references: [id])
+  clientId    Int
+  total       Float
+  orderDetail OrderDetail[]
+}
+
+model OrderDetail {
+  id        Int     @id @default(autoincrement())
+  quantity  Int     @default(1)
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
 }

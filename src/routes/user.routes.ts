@@ -10,7 +10,7 @@ import { signIn,
 export const userRouter = express.Router();
 
 userRouter.post('/', signUp);
-userRouter.post('/', signIn);
+userRouter.post('/signin', signIn);
 userRouter.post('/out/:userId', signOut);
 userRouter.get('/', verifyToken, getUsers);
 userRouter.delete('/:userId', verifyToken, deleteUser);

@@ -8,6 +8,7 @@ import { productRouter } from './routes/product.routes';
 import { userRouter  } from './routes/user.routes';
 import { clientRouter } from './routes/client.routes';
 import { cartRouter } from './routes/cart.routes';
+import { orderRouter } from './routes/order.routes';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use('/product', productRouter);
 app.use('/user', userRouter);
 app.use('/client', clientRouter);
 app.use('/cart', cartRouter);
+app.use('/order', orderRouter);
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
