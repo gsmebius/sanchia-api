@@ -8,7 +8,10 @@ export const getProductById = async (req: Request, res: Response) => {
     const { productId } = req.params;
     const product = await prisma.product.findFirst({
       where: { id: Number(productId) },
-      include: { category : true }
+      include: { 
+        category : true, 
+        productImages : true 
+      },
     });
     return res.status(200).send({
       product
@@ -24,7 +27,10 @@ export const getProductById = async (req: Request, res: Response) => {
 export const getProducts = async (req: Request, res: Response) => {
     try {
       const products = await prisma.product.findMany({
-        include: { category : true }
+        include: { 
+          category : true, 
+          productImages : true 
+        },
       });
       return res.status(200).send({
         products
@@ -39,14 +45,34 @@ export const getProducts = async (req: Request, res: Response) => {
   
   export const createProduct = async (req: Request, res: Response) => {
     try {
-      const { name, description, price, stock, categoryId } = req.body;
-      const newProduct = await prisma.product.create({
-        data: { name, description, price, stock, categoryId }
+
+      if (!req.files || !Array.isArray(req.files)) {
+        return res.status(400).json({ 
+          message: 'problems with the req.file' 
+        });
+      }
+    
+      const images = req.files.map((file: Express.Multer.File) => {
+        return{ url: file.path}
       });
+
+      const { name, description, price, stock, categoryId } = req.body;
+
+      const newProduct = await prisma.product.create({
+        data: { name, 
+          description, 
+          price : Number(price), 
+          stock : Number(stock), 
+          categoryId : Number (categoryId),
+          productImages: {create : images}
+         },
+      });
+
       return res.status(200).send({
         message: 'Product created successfully',
         newProduct
       });
+        
     } catch (err) {
       return res.status(500).send({
         message: 'ups, server error',

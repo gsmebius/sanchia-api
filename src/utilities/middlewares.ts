@@ -1,10 +1,14 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { CustomRequest } from './models';
+import multer from 'multer';
+
 const prisma = new PrismaClient();
 dotenv.config();
+
+//Access token 
 export const verifyToken = async (
   req: CustomRequest,
   res: Response,
@@ -44,3 +48,17 @@ export const verifyToken = async (
     });
   }
 };
+
+const storage = multer.diskStorage({
+  destination: './uploads/',
+  filename: (req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const extension = file.originalname.split('.').pop();
+    const filename = `${uniqueSuffix}.${extension}`;
+    cb(null, filename);
+  },
+});
+
+export const upload = multer({ storage });
+
+

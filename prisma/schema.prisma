@@ -47,21 +47,29 @@ model Cart {
 }
 
 model Product {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique
-  description String
-  price       Float
-  stock       Int
-  category    Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId  Int
-  Cart        Cart[]
-  orderDetail OrderDetail[]
+  id            Int             @id @default(autoincrement())
+  name          String          @unique
+  description   String
+  price         Float
+  stock         Int
+  category      Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId    Int
+  productImages ProductImages[]
+  Cart          Cart[]
+  orderDetail   OrderDetail[]
 }
 
 model Category {
   id      Int       @id @default(autoincrement())
   name    String
   product Product[]
+}
+
+model ProductImages {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  url       String
 }
 
 model Order {

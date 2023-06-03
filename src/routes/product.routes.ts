@@ -1,5 +1,5 @@
 import express from 'express';
-import { verifyToken } from '../utilities/middlewere';
+import { verifyToken, upload } from '../utilities/middlewares';
 import { getProducts, 
     getProductById, 
     createProduct, 
@@ -10,6 +10,6 @@ export const productRouter = express.Router();
 
 productRouter.get('/', getProducts);
 productRouter.get('/:productId', getProductById);
-productRouter.post('/', verifyToken, createProduct);
+productRouter.post('/', verifyToken, upload.array('images', 5), createProduct);
 productRouter.put('/:productId', verifyToken, updateProduct);
 productRouter.delete('/:productId', verifyToken, deleteProduct);

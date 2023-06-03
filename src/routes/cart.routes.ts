@@ -1,5 +1,5 @@
 import express from 'express';
-import { verifyToken } from '../utilities/middlewere';
+import { verifyToken } from '../utilities/middlewares';
 import { addToCart, 
     removeToCart, 
     getCart} from '../controllers/cart.controller';
