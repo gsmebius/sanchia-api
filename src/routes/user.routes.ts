@@ -1,17 +1,43 @@
-import express from 'express';
+import { Router } from 'express';
+import userController from '../controllers/user.controller';
 import { verifyToken } from '../utilities/middlewares';
-import { signIn, 
-    signUp, 
-    signOut, 
-    getUsers, 
-    deleteUser, 
-    updateUser } from '../controllers/user.controller';
 
-export const userRouter = express.Router();
+class UserRouter {
+    public router : Router = Router();
 
-userRouter.post('/', signUp);
-userRouter.post('/signin', signIn);
-userRouter.post('/out/:userId', signOut);
-userRouter.get('/', verifyToken, getUsers);
-userRouter.delete('/:userId', verifyToken, deleteUser);
-userRouter.put('/:userId', verifyToken, updateUser);
+    constructor() {
+        this.signUp();
+        this.signIn();
+        this.signOut();
+        this.getUsers();
+        this.updateUser();
+        this.deleteUser();
+    } 
+
+    public signUp = () => {
+        this.router.post('/', userController.signUp);
+    };
+
+    public signIn = () => {
+        this.router.post('/signin', userController.signIn);
+    };
+
+    public signOut = () => {
+        this.router.post('/out/:userId', userController.signOut);
+    };
+
+    public getUsers = () => {
+        this.router.get('/', verifyToken, userController.getUsers);
+    };
+
+    public updateUser = () => {
+        this.router.delete('/:userId', verifyToken, userController.updateUser);
+    };
+
+    public deleteUser = () => {
+        this.router.post('/:userId', verifyToken, userController.deleteUser);
+    };
+}
+
+const userRouter = new UserRouter();
+export default userRouter.router;

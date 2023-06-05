@@ -1,15 +1,38 @@
-import express from 'express';
+import { Router } from 'express';
+import categoryController from '../controllers/category.controller';
 import { verifyToken } from '../utilities/middlewares';
-import { getCategories, 
-    getCategoryById, 
-    createCategory, 
-    updateCategory, 
-    deleteCategory} from '../controllers/category.controller';
 
-export const categoryRouter = express.Router();
+class CategoryRouter {
+    public router : Router = Router();
 
-categoryRouter.get('/', getCategories);
-categoryRouter.get('/:categoryId', getCategoryById);
-categoryRouter.post('/', verifyToken, createCategory);
-categoryRouter.put('/:categoryId', verifyToken, updateCategory);
-categoryRouter.delete('/:categoryId', verifyToken, deleteCategory);
+    constructor() {
+        this.getCategoryById();
+        this.getCategories();
+        this.createCategory();
+        this.updateCategory();
+        this.deleteCategory();
+    }
+
+    public getCategoryById = () => {
+        this.router.get('/:categoryId', categoryController.getCategoryById);
+    };
+
+    public getCategories = () => {
+        this.router.get('/', categoryController.getCategories);
+    };
+
+    public createCategory = () => {
+        this.router.post('/', verifyToken, categoryController.createCategory);
+    };
+
+    public updateCategory = () => {
+        this.router.put('/:categoryId', verifyToken, categoryController.updateCategory);
+    };
+
+    public deleteCategory = () => {
+        this.router.put('/:categoryId', verifyToken, categoryController.deleteCategory);
+    };
+}
+
+const categoryRouter = new CategoryRouter();
+export default categoryRouter.router; 

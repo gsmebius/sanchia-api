@@ -1,15 +1,37 @@
-import express from 'express';
+import { Router } from 'express';
+import productController from '../controllers/product.controller';
 import { verifyToken, upload } from '../utilities/middlewares';
-import { getProducts, 
-    getProductById, 
-    createProduct, 
-    updateProduct, 
-    deleteProduct} from '../controllers/product.controller';
 
-export const productRouter = express.Router();
+class ProductRouter {
+    public router : Router = Router();
 
-productRouter.get('/', getProducts);
-productRouter.get('/:productId', getProductById);
-productRouter.post('/', verifyToken, upload.array('images', 5), createProduct);
-productRouter.put('/:productId', verifyToken, updateProduct);
-productRouter.delete('/:productId', verifyToken, deleteProduct);
+    constructor() {
+        this.getProductById();
+        this.getProducts();
+        this.createProduct();
+        this.updateProduct();
+    }
+
+    public getProductById = () => {
+        this.router.get('/:productId', productController.getProductById);
+    };
+
+    public getProducts = () => {
+        this.router.get('/', productController.getProducts);
+    };
+
+    public createProduct = () => {
+        this.router.post('/', upload.array('images'), verifyToken, productController.createProduct);
+    };
+
+    public updateProduct = () => {
+        this.router.put('/:productId', verifyToken, productController.updateProduct);
+    };
+
+    public deleteProduct = () => {
+        this.router.delete('/:productId', verifyToken, productController.deleteProduct);
+      };
+}
+
+const productRouter = new ProductRouter();
+export default productRouter.router;

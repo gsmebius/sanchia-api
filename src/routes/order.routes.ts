@@ -1,9 +1,28 @@
-import express from 'express';
+import { Router } from 'express';
+import orderController from '../controllers/order.controller';
 import { verifyToken } from '../utilities/middlewares';
-import { getOrder, 
-    createOrder} from '../controllers/order.controller';
 
-export const orderRouter = express.Router();
+class OrderRouter {
+    public router : Router = Router();
 
-orderRouter.get('/:orderId', verifyToken, getOrder);
-orderRouter.post('/', verifyToken, createOrder);
+    constructor() {
+        this.createOrder();
+        this.getOrder();
+        this.getOrders();
+    }
+
+    public getOrder = () => {
+        this.router.post('/:orderId', verifyToken, orderController.getOrder);
+    };
+
+    public getOrders = () => {
+        this.router.post('/', verifyToken, orderController.getOrders);
+    };
+
+    public createOrder = () => {
+        this.router.post('/', verifyToken, orderController.createOrder);
+    };
+}
+
+const orderRouter = new OrderRouter();
+export default orderRouter.router;

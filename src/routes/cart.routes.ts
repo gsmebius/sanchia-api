@@ -1,11 +1,28 @@
-import express from 'express';
+import { Router } from 'express';
+import cartController from '../controllers/cart.controller';
 import { verifyToken } from '../utilities/middlewares';
-import { addToCart, 
-    removeToCart, 
-    getCart} from '../controllers/cart.controller';
 
-export const cartRouter = express.Router();
+class CartRouter {
+    public router : Router = Router();
 
-cartRouter.get('/', verifyToken, getCart);
-cartRouter.post('/:productId', verifyToken, addToCart);
-cartRouter.delete('/:productId', verifyToken, removeToCart);
+    constructor() {
+        this.getCart();
+        this.addToCart();
+        this.removeToCart();
+    }
+
+    public getCart = () => {
+        this.router.get('/:orderId', verifyToken, cartController.getCart);
+    };
+
+    public addToCart = () => {
+        this.router.post(':productId', verifyToken, cartController.addToCart);
+    };
+
+    public removeToCart = () => {
+        this.router.delete(':productId', verifyToken, cartController.removeToCart);
+    };
+}
+
+const cartRouter = new CartRouter();
+export default cartRouter.router;
