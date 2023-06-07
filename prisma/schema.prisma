@@ -16,11 +16,6 @@ model User {
   role        UserRole @default(ADMIN)
 }
 
-enum UserRole {
-  ADMIN
-  SELLER
-}
-
 model Client {
   id          Int        @id @default(autoincrement())
   name        String
@@ -30,11 +25,6 @@ model Client {
   role        ClientRole @default(BUYER)
   cart        Cart[]
   order       Order[]
-}
-
-enum ClientRole {
-  DISTRIBUTOR
-  BUYER
 }
 
 model Cart {
@@ -61,7 +51,7 @@ model Product {
 
 model Category {
   id      Int       @id @default(autoincrement())
-  name    String
+  name    String    @unique
   product Product[]
 }
 
@@ -77,6 +67,7 @@ model Order {
   client      Client        @relation(fields: [clientId], references: [id])
   clientId    Int
   total       Float
+  saving      Float         @default(0)
   orderDetail OrderDetail[]
 }
 
@@ -87,4 +78,30 @@ model OrderDetail {
   orderId   Int
   product   Product @relation(fields: [productId], references: [id])
   productId Int
+}
+
+model Promotion {
+  id       Int           @id @default(autoincrement())
+  codeName String
+  amount   Float
+  quantity Int
+  enable   Boolean       @default(true)
+  type     PromotionType @default(PORCENTAGE)
+}
+
+// ENUMS
+
+enum PromotionType {
+  MONEY
+  PORCENTAGE
+}
+
+enum UserRole {
+  ADMIN
+  SELLER
+}
+
+enum ClientRole {
+  DISTRIBUTOR
+  BUYER
 }

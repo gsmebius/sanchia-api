@@ -12,15 +12,15 @@ class CartRouter {
     }
 
     public getCart = () => {
-        this.router.get('/:orderId', verifyToken, cartController.getCart);
+        this.router.get('/', verifyToken, cartController.getCart);
     };
 
     public addToCart = () => {
-        this.router.post(':productId', verifyToken, cartController.addToCart);
+        this.router.post('/:productId', verifyToken, cartController.addToCart);
     };
 
     public removeToCart = () => {
-        this.router.delete(':productId', verifyToken, cartController.removeToCart);
+        this.router.delete('/:productId', verifyToken, cartController.removeToCart);
     };
 }
 

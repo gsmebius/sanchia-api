@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Order" ADD COLUMN     "saving" DOUBLE PRECISION NOT NULL DEFAULT 0;

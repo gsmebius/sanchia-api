@@ -19,7 +19,7 @@ class UserRouter {
     };
 
     public signIn = () => {
-        this.router.post('/signin', userController.signIn);
+        this.router.post('/singin', userController.signIn);
     };
 
     public signOut = () => {

@@ -8,6 +8,7 @@ import clientRouter from './routes/client.routes';
 import orderRouter from './routes/order.routes';
 import productRouter from './routes/product.routes';
 import userRouter from './routes/user.routes';
+import promotionRouter from './routes/promotion.routes';
 
 class Server {
     public app: Application;
@@ -26,12 +27,13 @@ class Server {
     }
 
     routes(): void {
-        this.app.use('/users', userRouter);
+        this.app.use('/user', userRouter);
         this.app.use('/product', productRouter);
         this.app.use('/order', orderRouter);
         this.app.use('/client', clientRouter);
         this.app.use('/category', categoryRouter);
         this.app.use('/cart', cartRouter);
+        this.app.use('/promo', promotionRouter);
     }
 
     start(): void {

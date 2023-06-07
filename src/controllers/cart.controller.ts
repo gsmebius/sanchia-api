@@ -59,7 +59,7 @@ class CartController {
 
   removeToCart = async (req: CustomRequest, res: Response) => {
     try {
-      const { productId}  = req.params;
+      const { productId }  = req.params;
       const clientId = Number(req.user?.id);
       if (!productId || !clientId)
         return res.status(400).send({
