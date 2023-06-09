@@ -12,11 +12,11 @@ class OrderRouter {
     }
 
     public getOrder = () => {
-        this.router.post('/:orderId', verifyToken, orderController.getOrder);
+        this.router.get('/:orderId', verifyToken, orderController.getOrder);
     };
 
     public getOrders = () => {
-        this.router.post('/', verifyToken, orderController.getOrders);
+        this.router.get('/', verifyToken, orderController.getOrders);
     };
 
     public createOrder = () => {

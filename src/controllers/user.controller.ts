@@ -21,14 +21,9 @@ class UserController {
         where: { id: registerUser.id },
         data: { accessToken : tokenSession }
       });
-      return res.status(200).send({
-        userWithToken
-      });
+      return res.status(200).send({ userWithToken });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
@@ -38,68 +33,44 @@ class UserController {
       const user = await this.prisma.user.findFirst({
         where: { email }
       });
-      if (!user) {
-        res.status(404).json({
-          message: 'user not found'
-        });
-      }
+      if (!user) res.status(404).json({ message: 'user not found' });
+
       const checkpass = await compare(password, String(user?.password));
       const tokenSession = await tokenKey(user?.id);
       const userUpdate = await this.prisma.user.update({
         where: { id: user?.id },
         data: { accessToken: tokenSession }
       });
-      if (!checkpass) {
-        res.status(404).json({
-          message: 'incorrect password'
-        });
-      }
-      if (checkpass) {
-        return res.status(200).send({
-          userUpdate
-        });
-      }
+
+      if (!checkpass) return res.status(404).json({ message: 'incorrect password' });
+      
+      if (checkpass) return res.status(200).send({ userUpdate });
+      
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
   signOut = async (req: Request, res: Response) => {
     try {
       const { userId } = req.params;
-      if (!userId)
-        return res.status(400).send({
-          message: 'Missing param: id'
-        });
+      if (!userId) return res.status(400).send({ message: 'Missing param: id' });
       await this.prisma.user.update({
         where: { id: Number(userId) },
         data: { accessToken: '' }
       });
-      return res.status(200).send({
-        message: 'AccessToken was destroyed'
-      });
+      return res.status(200).send({ message: 'AccessToken was destroyed' });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
   getUsers = async (req: Request, res: Response) => {
     try {
       const users = await this.prisma.user.findMany();
-      return res.status(200).send({
-        users
-      });
+      return res.status(200).send({ users });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
@@ -112,15 +83,9 @@ class UserController {
         where: { id: Number(userId) },
         data: { name, email, password : passwordHash, role }
       });
-      return res.status(200).send({
-        message: 'user updated successfully',
-        userUpdate
-      });
+      return res.status(200).send({ message: 'user updated successfully', userUpdate });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
@@ -130,14 +95,9 @@ class UserController {
       await this.prisma.user.delete({
         where: { id: Number(userId) }
       });
-      return res.status(200).send({
-        message: 'user deleted successfully'
-      });
+      return res.status(200).send({ message: 'user deleted successfully' });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 }

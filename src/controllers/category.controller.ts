@@ -15,14 +15,9 @@ class CategoryController {
         where: { id: Number(categoryId) },
         include: { product : true }
       });
-      return res.status(200).send({
-        category
-      });
+      return res.status(200).send({ category });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
@@ -35,10 +30,7 @@ class CategoryController {
         categories
       });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
@@ -48,15 +40,11 @@ class CategoryController {
       const newCategory = await this.prisma.category.create({
         data: { name }
       });
-      return res.status(200).send({
-        message: 'Product created successfully',
-        newCategory
-      });
+
+      return res.status(200).send({ message: 'Product created successfully', newCategory });
+
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
@@ -68,15 +56,11 @@ class CategoryController {
         where: { id: Number(categoryId) },
         data: { name }
       });
-      return res.status(200).send({
-        message: 'product updated successfully',
-        categoryUpdate
-      });
+
+      return res.status(200).send({ message: 'product updated successfully', categoryUpdate });
+
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
@@ -86,14 +70,10 @@ class CategoryController {
       await this.prisma.category.delete({
         where: { id: Number(categoryId) }
       });
-      return res.status(200).send({
-        message: 'category deleted successfully'
-      });
+
+      return res.status(200).send({ message: 'category deleted successfully' });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 }

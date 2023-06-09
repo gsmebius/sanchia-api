@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { CustomRequest } from './models';
 import multer from 'multer';

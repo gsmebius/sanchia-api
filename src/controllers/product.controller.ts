@@ -18,14 +18,9 @@ class ProductController {
           productImages : true 
         },
       });
-      return res.status(200).send({
-        product
-      });
+      return res.status(200).send({ product  });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
@@ -37,25 +32,17 @@ class ProductController {
           productImages : true 
         },
       });
-      return res.status(200).send({
-        products
-      });
+      return res.status(200).send({  products  });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({  message: 'ups, server error',  err });
     }
   };
 
   createProduct = async (req: Request, res: Response) => {
     try {
 
-      if (!req.files || !Array.isArray(req.files)) {
-        return res.status(400).json({ 
-          message: 'problems with the req.file' 
-        });
-      }
+      if (!req.files || !Array.isArray(req.files)) 
+        return res.status(400).json({ message: 'problems with the req.file' });
     
       const images = req.files.map((file: Express.Multer.File) => {
         return{ url: file.path}
@@ -73,16 +60,10 @@ class ProductController {
          },
       });
 
-      return res.status(200).send({
-        message: 'Product created successfully',
-        newProduct
-      });
-        
+      return res.status(200).send({ message: 'Product created successfully', newProduct });
+     
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
@@ -94,15 +75,9 @@ class ProductController {
         where: { id: Number(productId) },
         data: { name, description, price, stock, categoryId }
       });
-      return res.status(200).send({
-        message: 'product updated successfully',
-        productUpdate
-      });
+      return res.status(200).send({ message: 'product updated successfully', productUpdate });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
@@ -112,14 +87,9 @@ class ProductController {
       await this.prisma.product.delete({
         where: { id: Number(productId) }
       });
-      return res.status(200).send({
-        message: 'product deleted successfully'
-      });
+      return res.status(200).send({ message: 'product deleted successfully' });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        error: err
-      });
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 }

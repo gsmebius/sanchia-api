@@ -10,21 +10,18 @@ class OrderController {
   }
 
   createOrder = async (req: CustomRequest, res: Response) => {
-    const clientId = Number(req.user?.id);
-    if (!clientId) {
-      return res.status(404).send({
-        message: 'you most SignIn'
-      });
-    }
+    const clientId = req.user?.id
+    const { cupon } = req.body;
+
+    if (!clientId) return res.status(404).send({ message: 'you most SignIn' });
+
     try {
       const getCart = await this.prisma.cart.findMany({
         where: { clientId },
         include: { product: true }
       });
-      if (!getCart)
-        return res.status(404).send({
-          message: 'The order is empty'
-        });
+
+      if (!getCart) return res.status(404).send({ message: 'The order is empty' });
 
       let total = 0;
       let stockChange: any = [];
@@ -49,92 +46,78 @@ class OrderController {
         return { productId, quantity };
       });
 
-      const firstTotal = total
+      const firstTotal = total;
+      let updateQuantity = 0;
+      let cuponId = 0;
+      let cuponValid = false;
 
-      const { cupon } = req.body;
       if (cupon) {
-        let cuponValid = false;
         const promo = await this.prisma.promotion.findFirst({
-          where: { codeName: String(cupon) }
+          where: { codeName: cupon }
         });
-        if (promo?.enable == false || promo?.quantity == 0 || !promo) {
-          return res.status(404).send({
-            message: 'sorry, your cupon is invalid'
-          });
-        } else {
-          if (promo?.type === PromotionType.MONEY ) {
-            total = total - Number(promo?.amount);
-            cuponValid = true;
-            if (total < 0) total = 0;
-          }
-          if (promo?.type === PromotionType.PORCENTAGE ) {
-            cuponValid = true;
-            total = (promo.amount / 100) * total;
-          }
+
+        if (!promo) return res.status(404).send({ message: "Sorry the coupon doesn't exist" });
+
+        if (!promo.enable || promo.quantity === 0)
+          return res.status(404).send({ message: 'The coupon is not availiba' });
+
+        cuponId = promo.id
+
+        if (promo?.type === PromotionType.MONEY) {
+          total = total - Number(promo?.amount);
+          cuponValid = true;
+          if (total < 0) total = 0;
         }
-        let updateQuantity = promo.quantity;
+        if (promo?.type === PromotionType.PORCENTAGE) {
+          cuponValid = true;
+          const porcentage = (promo.amount / 100) * total;
+          total = total - porcentage;
+        }
         if (cuponValid == true) {
-          updateQuantity = cupon.quantity - 1;
-        }
-        const updatePromo = this.prisma.promotion.update({
-          where: promo,
-          data: { quantity: updateQuantity }
-        });
-
-        const discount = firstTotal - total
-
-        const createOrder = this.prisma.order.create({
-          data: {
-            clientId,
-            total,
-            saving: discount,
-            orderDetail: { create: orderDetail }
-          }
-        });
-
-        const transaction = await this.prisma.$transaction([
-          updatePromo,
-          createOrder,
-          ...stockChange
-        ]);
-
-        if (!transaction) {
-          return res.status(404).send({
-            message: "sorry, there's a problem with the transaction"
-          });
+          updateQuantity = promo.quantity - 1;
         } else {
-          return res.status(200).send({
-            message: 'purchase successfully'
-          });
+          updateQuantity = promo.quantity;
         }
       }
-    } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        err
+
+      const saving = firstTotal - total;
+      const discount = firstTotal - saving;
+
+      const createOrder = this.prisma.order.create({
+        data: {
+          clientId,
+          total: firstTotal,
+          discountTotal: discount,
+          saving: saving,
+          orderDetail: { create: orderDetail }
+        }
       });
+
+      const transaction = await this.prisma.$transaction([createOrder, ...stockChange]);
+      const orderPurchased = await this.prisma.order.findFirst({
+        where: { id: (await createOrder).id }
+      });
+
+      if (transaction && cuponValid == true) await this.prisma.promotion.update({
+          where: { id: cuponId }, data: { quantity: updateQuantity } });
+
+      return res.status(200).send({ message: 'purchase successfully', orderPurchased });
+    } catch (err) {
+      return res.status(500).send({ message: 'ups, server error', err });
     }
   };
 
   getOrder = async (req: Request, res: Response) => {
     try {
       const { orderId } = req.params;
-      if (!orderId)
-        return res.status(404).send({
-          message: 'Missing param order id'
-        });
+      if (!orderId) return res.status(404).send({ message: 'Missing param order id' });
       const order = await this.prisma.order.findFirst({
         where: { id: Number(orderId) },
         include: { orderDetail: { include: { product: true } } }
       });
-      return res.status(200).send({
-        order
-      });
+      return res.status(200).send({ order });
     } catch (err) {
-      return res.status(500).send({
-        message: 'ups, server error',
-        err
-      });
+      return res.status(500).send({  message: 'ups, server error', err });
     }
   };
 
@@ -143,18 +126,10 @@ class OrderController {
       const orders = await this.prisma.order.findMany({
         include: { orderDetail: { include: { product: true } } }
       });
-      if (!orders)
-        return res.status(404).send({
-          message: 'no orders in the database'
-        });
-      return res.status(200).send({
-        orders
-      });
+      if (!orders) return res.status(404).send({ message: 'no orders in the database'  });
+      return res.status(200).send({  orders  });
     } catch (err) {
-      return res.status(500).send({
-        mesagge: 'ups, server error',
-        err
-      });
+      return res.status(500).send({  mesagge: 'ups, server error', err  });
     }
   };
 }

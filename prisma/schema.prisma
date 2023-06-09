@@ -63,12 +63,13 @@ model ProductImages {
 }
 
 model Order {
-  id          Int           @id @default(autoincrement())
-  client      Client        @relation(fields: [clientId], references: [id])
-  clientId    Int
-  total       Float
-  saving      Float         @default(0)
-  orderDetail OrderDetail[]
+  id            Int           @id @default(autoincrement())
+  client        Client        @relation(fields: [clientId], references: [id])
+  clientId      Int
+  total         Float
+  discountTotal Float         @default(0)
+  saving        Float         @default(0)
+  orderDetail   OrderDetail[]
 }
 
 model OrderDetail {
