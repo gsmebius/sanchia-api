@@ -9,6 +9,7 @@ import orderRouter from './routes/order.routes';
 import productRouter from './routes/product.routes';
 import userRouter from './routes/user.routes';
 import promotionRouter from './routes/promotion.routes';
+import preOrderRoutes from './routes/preorder.routes';
 
 class Server {
     public app: Application;
@@ -34,6 +35,7 @@ class Server {
         this.app.use('/category', categoryRouter);
         this.app.use('/cart', cartRouter);
         this.app.use('/promo', promotionRouter);
+        this.app.use('/preorder', preOrderRoutes);
     }
 
     start(): void {

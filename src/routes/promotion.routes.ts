@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken } from "../utilities/middlewares";
+import { verifyToken, forUsers } from "../utilities/middlewares";
 import promotionController from "../controllers/promotion.controller";
 
 class PromotionRouter {
@@ -14,23 +14,23 @@ class PromotionRouter {
     }
 
     public createPromotion = () => {
-        this.router.post('/', verifyToken, promotionController.createPromotion);
+        this.router.post('/', verifyToken, forUsers, promotionController.createPromotion);
     };
     
     public getPromotions = () => {
-        this.router.get('/', verifyToken, promotionController.getPromotions);
+        this.router.get('/', verifyToken, forUsers, promotionController.getPromotions);
     };
 
     public getPromotionById = () => {
-        this.router.get('/:promoId', verifyToken, promotionController.getPromotionById);
+        this.router.get('/:promoId', verifyToken, forUsers, promotionController.getPromotionById);
     };
 
     public updatePromotion = () => {
-        this.router.put('/:promoId', verifyToken, promotionController.updatePromotion);
+        this.router.put('/:promoId', verifyToken, forUsers, promotionController.updatePromotion);
     };
 
     public deletePromotion = () => {
-        this.router.delete('/:promoId', verifyToken, promotionController.deletePromotion);
+        this.router.delete('/:promoId', verifyToken, forUsers, promotionController.deletePromotion);
     };
 }
 

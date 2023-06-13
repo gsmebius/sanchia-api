@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   name        String
-  email       String   @unique
+  email       String     @unique
   password    String
   accessToken String?
-  role        UserRole @default(ADMIN)
+  role        UserRole   @default(ADMIN)
+  preOrder    preOrder[]
 }
 
 model Client {
@@ -25,6 +26,7 @@ model Client {
   role        ClientRole @default(BUYER)
   cart        Cart[]
   order       Order[]
+  preOrder    preOrder[]
 }
 
 model Cart {
@@ -88,6 +90,15 @@ model Promotion {
   quantity Int
   enable   Boolean       @default(true)
   type     PromotionType @default(PORCENTAGE)
+}
+
+model preOrder {
+  id       Int    @id @default(autoincrement())
+  client   Client @relation(fields: [clientId], references: [id])
+  clientId Int    @unique
+  user     User   @relation(fields: [userId], references: [id])
+  userId   Int    @unique
+  products Json
 }
 
 // ENUMS

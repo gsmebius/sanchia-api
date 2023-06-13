@@ -8,7 +8,7 @@ import multer from 'multer';
 const prisma = new PrismaClient();
 dotenv.config();
 
-//Access token 
+//Access token
 export const verifyToken = async (
   req: CustomRequest,
   res: Response,
@@ -27,9 +27,9 @@ export const verifyToken = async (
       where: { accessToken: token }
     });
 
-    let foundToken = false
+    let foundToken = false;
     if (tokenClientExist || tokenUserExist) {
-      foundToken = true
+      foundToken = true;
     }
 
     if (String(verify) && foundToken) {
@@ -44,7 +44,55 @@ export const verifyToken = async (
   } catch (err) {
     return res.status(500).send({
       message: 'ups, server error',
-      error: err
+      err
+    });
+  }
+};
+
+export const forUsers = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = Number(req.user?.id);
+
+    const user = await prisma.user.findFirst({
+      where: { id: Number(userId) }
+    });
+    if(user) {
+      next();
+    } res.status(404).send({
+      messagge: 'invalid user access'
+    })
+  } catch (err) {
+    return res.status(500).send({
+      message: "ups, server error",
+      err
+    });
+  }
+};
+
+export const forClients = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const clientId = Number(req.user?.id);
+
+    const client = await prisma.client.findFirst({
+      where: { id: Number(clientId) }
+    });
+    if(client) {
+      next();
+    } res.status(404).send({
+      messagge: 'invalid user access'
+    })
+  } catch (err) {
+    return res.status(500).send({
+      message: "ups, server error",
+      err
     });
   }
 };
@@ -56,9 +104,7 @@ const storage = multer.diskStorage({
     const extension = file.originalname.split('.').pop();
     const filename = `${uniqueSuffix}.${extension}`;
     cb(null, filename);
-  },
+  }
 });
 
 export const upload = multer({ storage });
-
-

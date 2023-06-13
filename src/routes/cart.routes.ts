@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import cartController from '../controllers/cart.controller';
-import { verifyToken } from '../utilities/middlewares';
+import { verifyToken, forClients } from '../utilities/middlewares';
 
 class CartRouter {
     public router : Router = Router();
@@ -12,15 +12,15 @@ class CartRouter {
     }
 
     public getCart = () => {
-        this.router.get('/', verifyToken, cartController.getCart);
+        this.router.get('/', verifyToken, forClients, cartController.getCart);
     };
 
     public addToCart = () => {
-        this.router.post('/:productId', verifyToken, cartController.addToCart);
+        this.router.post('/:productId', verifyToken, forClients, cartController.addToCart);
     };
 
     public removeToCart = () => {
-        this.router.delete('/:productId', verifyToken, cartController.removeToCart);
+        this.router.delete('/:productId', verifyToken, forClients, cartController.removeToCart);
     };
 }
 

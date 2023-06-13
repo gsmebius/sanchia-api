@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import orderController from '../controllers/order.controller';
-import { verifyToken } from '../utilities/middlewares';
+import { verifyToken, forUsers, forClients } from '../utilities/middlewares';
 
 class OrderRouter {
     public router : Router = Router();
@@ -16,11 +16,11 @@ class OrderRouter {
     };
 
     public getOrders = () => {
-        this.router.get('/', verifyToken, orderController.getOrders);
+        this.router.get('/', verifyToken, forUsers, orderController.getOrders);
     };
 
     public createOrder = () => {
-        this.router.post('/', verifyToken, orderController.createOrder);
+        this.router.post('/', verifyToken, forClients, orderController.createOrder);
     };
 }
 
