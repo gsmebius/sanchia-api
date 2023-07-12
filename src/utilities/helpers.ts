@@ -13,8 +13,8 @@ export const compare = async (pass: string, hash: string) => {
   return await bcrypt.compare(pass, hash);
 };
 
-export const tokenKey = async (user: any) => {
-  const token = jwt.sign({ id: user }, String(process.env.JWT_KEY), {
+export const tokenKey = async (userId: any) => {
+  const token = jwt.sign({ id: userId }, String(process.env.JWT_KEY), {
     expiresIn: '5d'
   });
   return String(token);

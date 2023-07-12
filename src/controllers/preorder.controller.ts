@@ -11,24 +11,25 @@ class PreOrderController {
 
   createPreOrder = async (req: CustomRequest, res: Response) => {
     try {
-      const clientId = Number(req.params);
       const userId = Number(req.user?.id);
-      const products = req.body;
+      const  { products } = req.body;
+      const  { clientId } = req.params;
+      if (!clientId || !userId || !products)
+        return res.status(404).send({ message: 'Missing values' });
 
-      if (!clientId)
-        return res.status(400).send({ message: 'Missing param clientId' });
-      if (!userId)
-        return res.status(400).send({ message: 'Missing param userId' });
-      if (!products)
-        return res.status(400).send({ message: 'Missing products' });
+      const client = await this.prisma.client.findFirst({
+        where: { id : Number(clientId) }
+      });
+
+      if (!client) return res.status(404).send({ message: "that client doesn't exist" })
 
       const createPreOrder = await this.prisma.preOrder.create({
-        data: { clientId, userId, products }
+        data: { clientId : Number(clientId), userId, products }
       });
 
       return res
         .status(200)
-        .send({ message: 'product added successfully', createPreOrder });
+        .send({ message: 'preorder created successfully', createPreOrder });
     } catch (err) {
       return res.status(500).send({ message: 'ups, server error', err });
     }
@@ -60,15 +61,15 @@ class PreOrderController {
 
   updatePreOrder = async (req: Request, res: Response) => {
     try {
-      const clientId = Number(req.params);
-      const products = req.body;
+      const  { products } = req.body;
+      const  { clientId } = req.params;
       const preOrderUpdate = await this.prisma.preOrder.update({
-        where: { clientId },
+        where: { clientId : Number(clientId) },
         data: { products }
       });
       return res
         .status(200)
-        .send({ message: 'product updated successfully', preOrderUpdate });
+        .send({ message: 'preorder updated successfully', preOrderUpdate });
     } catch (err) {
       return res.status(500).send({ message: 'ups, server error', err });
     }
@@ -76,11 +77,12 @@ class PreOrderController {
 
   deletePreOrder = async (req: Request, res: Response) => {
     try {
-      const clientId = Number(req.params);
+      const  { clientId } = req.params;
+      if (!clientId) return res.status(404).send({ message: 'missing params' })
       await this.prisma.preOrder.delete({
-        where: { clientId }
+        where: { clientId : Number(clientId)}
       });
-      return res.status(200).send({ message: 'category deleted successfully' });
+      return res.status(200).send({ message: 'preorder deleted successfully' });
     } catch (err) {
       return res.status(500).send({ message: 'ups, server error', err });
     }

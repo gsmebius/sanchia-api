@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import categoryController from '../controllers/category.controller';
-import { verifyToken, forUsers } from '../utilities/middlewares';
+import { verifyToken } from '../utilities/middlewares';
 
 class CategoryRouter {
     public router : Router = Router();
@@ -22,15 +22,15 @@ class CategoryRouter {
     };
 
     public createCategory = () => {
-        this.router.post('/', verifyToken, forUsers, categoryController.createCategory);
+        this.router.post('/', verifyToken, categoryController.createCategory);
     };
 
     public updateCategory = () => {
-        this.router.put('/:categoryId', verifyToken, forUsers, categoryController.updateCategory);
+        this.router.put('/:categoryId', verifyToken, categoryController.updateCategory);
     };
 
     public deleteCategory = () => {
-        this.router.put('/:categoryId', verifyToken, forUsers, categoryController.deleteCategory);
+        this.router.put('/:categoryId', verifyToken, categoryController.deleteCategory);
     };
 }
 

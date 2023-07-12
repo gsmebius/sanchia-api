@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import productController from '../controllers/product.controller';
-import { verifyToken, upload, forUsers } from '../utilities/middlewares';
+import { verifyToken, upload } from '../utilities/middlewares';
 
 class ProductRouter {
     public router : Router = Router();
@@ -21,15 +21,15 @@ class ProductRouter {
     };
 
     public createProduct = () => {
-        this.router.post('/', upload.array('images'), verifyToken, forUsers, productController.createProduct);
+        this.router.post('/', upload.array('images'), verifyToken, productController.createProduct);
     };
 
     public updateProduct = () => {
-        this.router.put('/:productId', verifyToken, forUsers, productController.updateProduct);
+        this.router.put('/:productId', verifyToken, productController.updateProduct);
     };
 
     public deleteProduct = () => {
-        this.router.delete('/:productId', verifyToken, forUsers, productController.deleteProduct);
+        this.router.delete('/:productId', verifyToken, productController.deleteProduct);
       };
 }
 

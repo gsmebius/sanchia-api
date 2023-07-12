@@ -16,7 +16,7 @@ class UserController {
       const registerUser = await this.prisma.user.create({
         data: { name, email, password: passwordHash, role }
       });
-      const tokenSession = await tokenKey(registerUser.id);
+      const tokenSession = await tokenKey(registerUser?.id);
       const userWithToken = await this.prisma.user.update({
         where: { id: registerUser.id },
         data: { accessToken : tokenSession }

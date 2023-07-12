@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import preOrderController from '../controllers/preorder.controller';
-import { verifyToken, forUsers } from '../utilities/middlewares';
+import { verifyToken, verifyRole } from '../utilities/middlewares';
 
 class PreOrderRouter {
     public router : Router = Router();
@@ -14,23 +14,23 @@ class PreOrderRouter {
     }
 
     public getPreOrderByClientId = () => {
-        this.router.get('/:clientId', verifyToken, forUsers, preOrderController.getPreOrderByClientId);
+        this.router.get('/:clientId', verifyToken, preOrderController.getPreOrderByClientId);
     };
 
     public getPreOrders = () => {
-        this.router.get('/', verifyToken, forUsers, preOrderController.getPreOrders);
+        this.router.get('/', verifyToken, verifyRole('read', 'preorder'), preOrderController.getPreOrders);
     };
 
     public createPreOrder = () => {
-        this.router.post('/', verifyToken, forUsers, preOrderController.createPreOrder);
+        this.router.post('/:clientId', verifyToken, preOrderController.createPreOrder);
     };
 
     public updatePreOrder = () => {
-        this.router.put('/:clientId', verifyToken, forUsers, preOrderController.updatePreOrder);
+        this.router.put('/:clientId', verifyToken, preOrderController.updatePreOrder);
     };
 
     public deletePreOrder = () => {
-        this.router.put('/:clientId', verifyToken, forUsers, preOrderController.deletePreOrder);
+        this.router.delete('/:clientId', verifyToken, preOrderController.deletePreOrder);
     };
 }
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import clienController from '../controllers/client.controller';
-import { verifyToken, forUsers } from '../utilities/middlewares';
+import { verifyToken } from '../utilities/middlewares';
 
 class ClientRouter {
     public router : Router = Router();
@@ -27,7 +27,7 @@ class ClientRouter {
     }
 
     public getClients = () => {
-        this.router.get('/', verifyToken, forUsers, clienController.getClients)
+        this.router.get('/', verifyToken, clienController.getClients)
     }
 
     public deleteClient = () => {

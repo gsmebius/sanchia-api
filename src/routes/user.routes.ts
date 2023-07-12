@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import userController from '../controllers/user.controller';
-import { verifyToken, forUsers } from '../utilities/middlewares';
+import { verifyToken } from '../utilities/middlewares';
 
 class UserRouter {
     public router : Router = Router();
@@ -27,15 +27,15 @@ class UserRouter {
     };
 
     public getUsers = () => {
-        this.router.get('/', verifyToken, forUsers, userController.getUsers);
+        this.router.get('/', verifyToken, userController.getUsers);
     };
 
     public updateUser = () => {
-        this.router.delete('/:userId', verifyToken, forUsers, userController.updateUser);
+        this.router.delete('/:userId', verifyToken, userController.updateUser);
     };
 
     public deleteUser = () => {
-        this.router.post('/:userId', verifyToken, forUsers, userController.deleteUser);
+        this.router.post('/:userId', verifyToken, userController.deleteUser);
     };
 }
 
