@@ -1,21 +1,13 @@
 {
     "env": {
-        "es2021": true,
-        "node": true
+        "browser": true,
+        "es2021": true
     },
-    "extends": [
-        "standard-with-typescript",
-        "plugin:prettierrecommended",
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
-    ],
-    "plugins": ["@typescript-eslint", "import", "prettier"],
-    "overrides": [],
+    "extends": "standard-with-typescript",
     "parserOptions": {
-        "ecmaVersion": "latest",
-        "project": "./tsconfig.json"
+        "project": "tsconfig.json",
+        "tsconfigRootDir": "./",
+        "sourceType": "module"
     },
-    "rules": {
-        "prettier/prettier": "error"
-    }
+    "rules": {}
 }
